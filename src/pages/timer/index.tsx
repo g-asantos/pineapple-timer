@@ -8,19 +8,29 @@ import {
   PomodoroContainer,
 } from './styles';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const alarmSound = require('../../assets/oogah_horn05.wav');
+
 const Timer: React.FC = () => {
-  const [seconds, setSeconds] = useState(60);
-  const [minutes, setMinutes] = useState(24);
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(25);
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState('pomodoro');
   const [breakTimer, setBreakTimer] = useState(0);
   const [clicked, setClicked] = useState('');
+
+  const alarmAudio = new Audio(alarmSound);
+
+  const playSound = (audioFile: HTMLAudioElement) => {
+    audioFile.play();
+  };
 
   useEffect(() => {
     let interval: number;
 
     if (seconds === 0 && minutes === 0) {
       setIsActive(false);
+      playSound(alarmAudio);
     }
 
     if (isActive && seconds === 0) {
@@ -35,12 +45,12 @@ const Timer: React.FC = () => {
     }
 
     return () => clearInterval(interval);
-  }, [seconds, isActive, minutes]);
+  }, [seconds, isActive, minutes, alarmAudio]);
 
   const pomodoro = useCallback(() => {
     setMinutes(25);
     setSeconds(0);
-    setIsActive(true);
+
     setMode('pomodoro');
     setClicked('pomodoro');
   }, []);
@@ -48,7 +58,7 @@ const Timer: React.FC = () => {
   const shortBreak = useCallback(() => {
     setMinutes(4);
     setSeconds(0);
-    setIsActive(true);
+
     setMode('short break');
     setClicked('short break');
   }, []);
@@ -56,7 +66,6 @@ const Timer: React.FC = () => {
   const longBreak = useCallback(() => {
     setMinutes(10);
     setSeconds(0);
-    setIsActive(true);
     setMode('long break');
     setClicked('long break');
   }, []);
@@ -130,8 +139,10 @@ const Timer: React.FC = () => {
       </PomodoroContainer>
 
       <div>
-        {minutes}:{seconds}s
-      </div>
+        {minutes}
+:{seconds}
+s
+</div>
 
       <ButtonContainer>
         <Button theme="green" onClick={start}>
