@@ -91,6 +91,7 @@ const Timer: React.FC = () => {
     } else if (breakTimer === 4) {
       longBreak();
       setMode('long break');
+      setBreakTimer(0);
     }
   }, [mode, minutes, breakTimer, seconds, longBreak, pomodoro, shortBreak]);
 
@@ -139,10 +140,8 @@ const Timer: React.FC = () => {
       </PomodoroContainer>
 
       <div>
-        {minutes}
-:{seconds}
-s
-</div>
+        {minutes}:{seconds}s
+      </div>
 
       <ButtonContainer>
         <Button theme="green" onClick={start}>
